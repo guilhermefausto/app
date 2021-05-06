@@ -1,5 +1,4 @@
 import {Request, Response} from 'express';
-import { func } from 'joi';
 import {IAccount} from '../models/account';
 import repository from '../models/accountModel';
 
