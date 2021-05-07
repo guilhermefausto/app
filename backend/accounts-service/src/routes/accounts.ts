@@ -1,18 +1,19 @@
 import {Router} from 'express';
 import accountsController from '../controllers/accounts';
-import {validateAccount,validateLogin} from './middlewares'
+import {validateAccountSchema,validateLoginSchema, validateUpdateAccountSchema, validateAuth} from './middlewares'
+import calc from 'ms-commons/calc';
 
 const router = Router();
 
-router.get('/accounts/',accountsController.getAccounts)
+router.get('/accounts/',validateAuth,accountsController.getAccounts)
 
-router.get('/accounts/:id',accountsController.getAccount);
+router.get('/accounts/:id',validateAuth,accountsController.getAccount);
 
-router.patch('/accounts/:id', validateAccount, accountsController.setAccount);
+router.patch('/accounts/:id',validateAuth, validateUpdateAccountSchema, accountsController.setAccount);
 
-router.post('/accounts/', validateAccount, accountsController.addAccount)
+router.post('/accounts/', validateAccountSchema, accountsController.addAccount)
 
-router.post('/accounts/login', validateLogin, accountsController.loginAccount)
+router.post('/accounts/login', validateLoginSchema, accountsController.loginAccount)
 
 router.post('/accounts/logout', accountsController.logoutAccount)
 

@@ -1,13 +1,12 @@
-import { func } from 'joi';
 import Sequelize, {Model,Optional} from 'sequelize';
 import database from '../db';
 import {IAccount} from './account';
 
-interface AccountCreationAttributes extends Optional<IAccount,"id">{}
+interface IAccountCreationAttributes extends Optional<IAccount,"id">{}
 
-export interface AccountModel extends Model<IAccount, AccountCreationAttributes>, IAccount{}
+export interface IAccountModel extends Model<IAccount, IAccountCreationAttributes>, IAccount{}
 
-const accountModel = database.define<AccountModel>('account',{
+export default database.define<IAccountModel>('account',{
     id: {
         type: Sequelize.INTEGER.UNSIGNED,
         primaryKey: true,
@@ -15,16 +14,16 @@ const accountModel = database.define<AccountModel>('account',{
         allowNull: false
     },
     name: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(150),
         allowNull: false
     },
     email: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(150),
         allowNull: false,
         unique: true
     },
     password: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(50),
         allowNull: false
     },
     status: {
@@ -32,21 +31,7 @@ const accountModel = database.define<AccountModel>('account',{
         defaultValue: 100
     },
     domain: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(100),
         allowNull: false
     }
 })
-
-function findAll() {
-    return accountModel.findAll<AccountModel>();
-}
-
-function  findById(id:number) {
-    return accountModel.findByPk<AccountModel>(id);
-}
-
-function add(account:IAccount) {
-    return accountModel.create(account);
-}
-
-export default {findAll, findById, add}

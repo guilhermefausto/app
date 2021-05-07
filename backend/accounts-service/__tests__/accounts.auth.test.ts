@@ -1,26 +1,32 @@
-import { expectCt } from 'helmet';
-import { isMainThread } from 'node:worker_threads';
 import request from 'supertest';
 import app from './../src/app';
+import repository from '../src/models/accountRepository';
+import { IAccount } from '../src/models/account';
 
-describe('testando rotas de autenticação', () => {
+const testEmail = 'jest@account.auth.com';
+const hashPassword = '$2a$10$ez0VDj0Gh.tRC/jFxoLIieuo2cgPDhVvWLQl5T0dqW3LI0GPLA4Fm'; //senha 123456 
+const testPassword = '123456';
+
+beforeAll(async ()=>{
+    const testAccount : IAccount = {
+        name: 'Jest',
+        email: testEmail,
+        password: hashPassword,
+        domain: 'jest.com'
+    }
+    await repository.add(testAccount);
+})
+
+afterAll(async ()=> {
+    await repository.removeByEmail(testEmail);
+})
+
+describe('Testando rotas de autenticação', () => {
     it('POST /accounts/login - 200 OK', async ()=>{
-        //Mocking
-        const newAccount ={
-            id: 1,
-            name: 'Guilherme',
-            email: 'guilhermesfausto@gmail.com',
-            password: '123456',
-            status: 100
-        }
-
-        await request(app)
-            .post('/accounts')
-            .send(newAccount)
-        
+       
         const payload = {
-            email: "guilhermesfausto@gmail.com",
-            password: '123456'
+            email: testEmail,
+            password: testPassword
         }
 
         const resultado = await request(app)
@@ -35,8 +41,7 @@ describe('testando rotas de autenticação', () => {
     
     it('POST /accounts/login - 422 Unprocessable Entity', async ()=>{
         const payload = {
-            email: "guilhermesfausto@gmail.com",
-            password: 'abc'
+            email: testEmail
         }
 
         const resultado = await request(app)
@@ -48,8 +53,8 @@ describe('testando rotas de autenticação', () => {
 
     it('POST /accounts/login - 401 Unauthorized', async ()=>{
         const payload = {
-            email: "guilhermesfausto@gmail.com",
-            password: 'abc123'
+            email: testEmail,
+            password: testPassword+'1'
         }
 
         const resultado = await request(app)
