@@ -1,5 +1,5 @@
 import Sequelize, {Model,Optional} from 'sequelize';
-import database from '../db';
+import database from 'ms-commons/data/db';
 import {IAccount} from './account';
 
 interface IAccountCreationAttributes extends Optional<IAccount,"id">{}

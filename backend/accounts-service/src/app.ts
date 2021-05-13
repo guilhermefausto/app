@@ -1,13 +1,5 @@
 //app.ts
-import express from 'express';
-import bodyParser from 'body-parser';
-import helmet from 'helmet';
+import app from 'ms-commons/api/app'
 import accountsRouter from './routes/accounts'
 
-const app = express();
-app.use(helmet());
-app.use(express.json());
-
-app.use(accountsRouter)
-
-export default app;
+export default app(accountsRouter);

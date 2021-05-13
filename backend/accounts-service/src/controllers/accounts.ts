@@ -2,11 +2,13 @@ import {Request, Response} from 'express';
 import {IAccount} from '../models/account';
 import repository from '../models/accountRepository';
 import auth from '../auth';
+import controllerCommons from 'ms-commons/api/controllers/controller';
+import {Token} from 'ms-commons/api/auth';
 
 const accounts : IAccount[] = [];
 
 async function getAccounts(req: Request, res: Response, next: any){
-    const accounts = await repository.findAll();
+    const accounts : IAccount [] = await repository.findAll();
     res.json(accounts.map(item =>{
         item.password = '';
         return item;
@@ -17,8 +19,10 @@ async function getAccount(req: Request, res: Response, next: any){
 
     try {
         const id = parseInt(req.params.id);
-        
         if(!id) return res.status(400).end();
+
+        const token = controllerCommons.getToken(res) as Token;
+        if(id !== token.accountId) return res.status(403).end();
 
         const account =  await repository.findById(id);
         if (account === null)
@@ -39,6 +43,9 @@ async function setAccount(req: Request, res: Response, next: any){
     try {
         const accountId = parseInt(req.params.id);
         if(!accountId) return res.status(400).end();
+
+        const token = controllerCommons.getToken(res) as Token;
+        if(accountId !== token.accountId) return res.status(403).end();
         
         const accountParams = req.body as IAccount;
         
@@ -92,7 +99,7 @@ async function loginAccount(req: Request, res: Response, next: any){
         res.status(401).end();
         
     } catch (error) {
-        console.log(error);
+        console.log(`deeleAccount: ${error}`);
         res.status(400).end();
     }
 }
@@ -101,4 +108,20 @@ function logoutAccount(req: Request, res: Response, next: any){
     res.json({auth: false, token: {}})
 }
 
-export default { getAccounts, addAccount, getAccount, setAccount, loginAccount, logoutAccount}
+async function deleteAccount(req: Request, res: Response, next: any){
+    try {
+        const accountId = parseInt(req.params.id);
+        if(!accountId) return res.status(400).end();
+
+        const token = controllerCommons.getToken(res) as Token;
+        if(accountId !== token.accountId) return res.status(403).end();
+
+        await repository.remove(accountId);
+        res.status(200).end();
+    } catch (error) {
+        console.log(error);
+        res.status(400).end();
+    }
+}
+
+export default { getAccounts, addAccount, getAccount, setAccount, loginAccount, logoutAccount, deleteAccount}
