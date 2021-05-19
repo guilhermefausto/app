@@ -35,10 +35,14 @@ class SignIn extends React.Component{
                                 placeholder="Digite sua senha"
                                 />
                             </Form.Group>
-
-                            <Button variant="secondary" size="lg" block>
-                                Fazer login
-                            </Button>
+                            
+                            {/*Mudança no Boostrap 5 que substitui o block do button, para colocar o botão na largura do container*/}
+                            <div class="d-grid gap-2">
+                                <Button variant="secondary" type="submit">
+                                    Fazer login
+                                </Button>
+                            </div>
+                            
 
                         </Form>
                     </Col>
