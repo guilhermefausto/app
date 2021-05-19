@@ -9,6 +9,7 @@ import {
 } from 'react-router-dom';
 
 import SignIn from '../src/pages/public/SignIn';
+import SignUp from '../src/pages/public/SignUp';
 
 
 function Home(){
@@ -39,14 +40,6 @@ function Contacts (){
                 </Route>
             </Switch>
 
-        </div>
-    )
-}
-
-function SignUp(){
-    return(
-        <div>
-            <h2>Cadastro</h2>
         </div>
     )
 }
