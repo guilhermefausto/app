@@ -102,12 +102,16 @@ class SignUp extends React.Component{
                                     />
                                 </FormGroup>
 
-                                {/*Mudança no Boostrap 5 que substitui o block do button, para colocar o botão na largura do container*/}
+                                {/*Mudança no Boostrap 5 que substitui o block do button, para colocar o botão na largura do container
                                 <div className="d-grid gap-2">
                                     <Button variant="primary" type="submit">
                                         Realizar Cadastro
                                     </Button>
-                                </div>                                                                                                                         
+                                </div>*/}
+                                <Button variant="primary" type="submit" block>
+                                    Realizar Cadastro
+                                </Button>
+
                             </Form>
                         </BoxForm>
 
