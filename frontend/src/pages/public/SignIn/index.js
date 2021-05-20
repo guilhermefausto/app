@@ -1,13 +1,39 @@
 import React from 'react';
 import {Button, Form, Container, Row, Col} from 'react-bootstrap';
 import Logo from '../../../assets/logo.png'
-import {BoxContent, BoxForm} from './style';
-import {Link} from 'react-router-dom';
+import {BoxContent, BoxForm} from '../../../shared/styles';
+import {Link, withRouter} from 'react-router-dom';
+import AccountsServices from '../../../services/accounts'
+import {login} from '../../../services/auth';
+
 
 class SignIn extends React.Component{
 
+    state = {
+        email: '',
+        password: '',
+        error: ''
+    }
+
     handleSignIn = async (event) => {
         event.preventDefault();
+
+        const {email, password, error} = this.state;
+
+        if(!email || !password){
+            this.setState({error: "Informe todos os campos para fazer login"})
+        }
+        else{
+            try {
+                const service = new AccountsServices();
+                const response = await service.login(email, password)
+                login(response.data.token)
+                this.props.history.push('/');
+            } catch (error) {
+                console.log(error);
+                this.setState({error: "Ocorreu um erro durante a tentativa de login"});
+            }        
+        }
     }
 
     render (){
@@ -29,6 +55,7 @@ class SignIn extends React.Component{
                                     <Form.Control 
                                     type="email"
                                     placeholder="Digite seu e-mail"
+                                    onChange={e => this.setState({email: e.target.value})}
                                     />
                                 </Form.Group>
 
@@ -37,11 +64,12 @@ class SignIn extends React.Component{
                                     <Form.Control 
                                     type="password"
                                     placeholder="Digite sua senha"
+                                    onChange={e => this.setState({password: e.target.value})}
                                     />
                                 </Form.Group>
                                 
                                 {/*Mudança no Boostrap 5 que substitui o block do button, para colocar o botão na largura do container*/}
-                                <div class="d-grid gap-2">
+                                <div className="d-grid gap-2">
                                     <Button variant="secondary" type="submit">
                                         Fazer login
                                     </Button>
@@ -60,4 +88,4 @@ class SignIn extends React.Component{
 
 }
 
-export default SignIn;
+export default withRouter(SignIn);

@@ -10,9 +10,10 @@ import {
     FormLabel,
     FormControl
 } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, withRouter} from 'react-router-dom';
 import Logo from '../../../assets/logo.png';
-import {BoxContent, BoxForm} from './style';
+import {BoxContent, BoxForm} from '../../../shared/styles';
+import AccountsServices from '../../../services/accounts'
 
 class SignUp extends React.Component{
     state = {
@@ -27,6 +28,21 @@ class SignUp extends React.Component{
     handleSignUp = async(event) =>{
         event.preventDefault();
         const {name, email, password, domain, isLoading} = this.state
+
+        if(!name || !email || !domain || !password){
+            this.setState({error: "Informe todos os campos para se cadastrar"})
+        }
+        else{
+            try {
+                const service = new AccountsServices();
+                await service.signup({name,email, password, domain})
+                this.props.history.push('/signin');
+            } catch (error) {
+                console.log(error);
+                this.setState({error: "ocorreu um erro durante a criação da conta"});
+            }
+
+        }
     }
 
     renderError = () => {
@@ -48,7 +64,7 @@ class SignUp extends React.Component{
                         <BoxForm>
                             <h2>Cadastro</h2>
                             <p>Informe todos os campos para realizar o cadastro</p>
-                            <Form>
+                            <Form onSubmit={this.handleSignUp}>
                                 {this.state.error && this.renderError()}
                                 <FormGroup controlId="nomeGroup">
                                     <FormLabel>Nome:</FormLabel>
@@ -80,14 +96,14 @@ class SignUp extends React.Component{
                                 <FormGroup controlId="senhaGroup">
                                     <FormLabel>Senha:</FormLabel>
                                     <FormControl
-                                        type="text"
+                                        type="password"
                                         placeholder="Digite sua senha"
                                         onChange={e => this.setState({password: e.target.value})}
                                     />
                                 </FormGroup>
 
                                 {/*Mudança no Boostrap 5 que substitui o block do button, para colocar o botão na largura do container*/}
-                                <div class="d-grid gap-2">
+                                <div className="d-grid gap-2">
                                     <Button variant="primary" type="submit">
                                         Realizar Cadastro
                                     </Button>
@@ -106,4 +122,4 @@ class SignUp extends React.Component{
     }
 }
 
-export default SignUp
+export default withRouter(SignUp)
