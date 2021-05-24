@@ -1,4 +1,7 @@
-export default {
-    API_ACCOUNTS: `http://localhost:4001`,
-    API_CONTACTS: `http://localhost:4002`
-}
+const baseAPIs = {
+                    API_ACCOUNTS: process.env.REACT_APP_API_ACCOUNTS,
+                    API_CONTACTS: process.env.REACT_APP_API_CONTACTS
+                 }   
+
+
+export default baseAPIs;

@@ -47,7 +47,7 @@ class ContactDetails extends React.Component{
                 <Header />
                 <PageContent>
                     <Container>
-                        <h3>dados do contato</h3>
+                        <h3>Dados do contato</h3>
                         {isLoading ? (
                             <p>Carregando...</p>
                         ) : (<RenderContact contact={contact}/>)}

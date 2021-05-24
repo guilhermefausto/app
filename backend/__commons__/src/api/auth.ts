@@ -3,10 +3,18 @@ import fs from 'fs';
 import path from 'path'
 
 
-const publicKey = fs.readFileSync(path.resolve(__dirname,'../../keys/public.key'),'utf-8');
+const publicKey = fs.readFileSync(path.join(findKeysPath(__dirname),'public.key'),'utf-8');
 const jwtAlgorithm = 'RS256';
 
 export type Token = { accountId: number};
+
+//Função recursiva para procurar a pasta keys
+function findKeysPath(currentPath:string): string {
+    const keysPath = path.join(currentPath,'keys');
+    if(fs.existsSync(keysPath)) return keysPath;
+    //A recursividade ocorre exatamente aqui
+    else return findKeysPath(path.join(currentPath,'..'));
+}
 
 
 async function verify(token:string) {
@@ -21,4 +29,4 @@ async function verify(token:string) {
     }
 }
 
-export default {verify}
+export default {verify, findKeysPath}

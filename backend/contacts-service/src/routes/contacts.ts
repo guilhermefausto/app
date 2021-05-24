@@ -10,6 +10,6 @@ router.get('/contacts/',middlewaresCommons.validateAuth, controller.getContacts)
 
 router.post('/contacts/',middlewaresCommons.validateAuth, validateContactSchema, controller.addContact);
 
-router.patch('/contacts/:id',middlewaresCommons.validateAuth, validateUpdateContactSchema, controller.setContact)
+router.patch('/contacts/:id',middlewaresCommons.validateAuth, validateUpdateContactSchema, controller.setContact);
 
 export default router;

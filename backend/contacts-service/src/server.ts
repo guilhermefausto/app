@@ -10,7 +10,7 @@ import database from 'ms-commons/data/db';
         console.log(`Running database ${process.env.DB_NAME}`);
 
         await app.listen(port)
-        console.log(`Running on port ${port}`);
+        console.log(`Running ${process.env.MS_NAME} on port ${port}`);
 
     } catch (error) {
         console.log(`${error}`);    

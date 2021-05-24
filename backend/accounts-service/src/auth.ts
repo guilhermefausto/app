@@ -4,9 +4,9 @@ import fs from 'fs';
 import authCommons, {Token} from 'ms-commons/api/auth';
 import path from 'path';
 
-//const privateKey = fs.readFileSync(path.resolve(__dirname, '../keys/private.key'),'utf-8');
+const privateKey = fs.readFileSync(path.join(authCommons.findKeysPath(__dirname), 'private.key'),'utf-8');
 //Caminho fixo para a chave privada, ajustar depois
-const privateKey = fs.readFileSync('/home/guilherme/projetos/curso-full-stack/mailshrimp/backend/accounts-service/keys/private.key','utf-8');
+//const privateKey = fs.readFileSync('/home/guilherme/projetos/curso-full-stack/mailshrimp/backend/accounts-service/keys/private.key','utf-8');
 
 const jwtExpires = parseInt(`${process.env.JWT_EXPIRES}`);
 const jwtAlgorithm = 'RS256';
