@@ -1,9 +1,13 @@
 import contactModel, {IContactModel} from './contactModel';
 import {IContact} from './contact';
+import {ContactStatus} from './contactStatus';
 
-function findAll(accountId:number) {
-    return contactModel.findAll<IContactModel>({where:{accountId}});
-}
+function findAll(accountId:number, includeRemoved:boolean) {
+    if(includeRemoved)
+        return contactModel.findAll<IContactModel>({where:{accountId}});
+    else
+        return contactModel.findAll<IContactModel>({where:{accountId, status:[ContactStatus.SUBSCRIBED,ContactStatus.UNSUBSCRIBED]}}); 
+}   
 
 function findById(contactId:number, accountId: number) {
     return contactModel.findOne<IContactModel>({where: {id: contactId, accountId: accountId}})

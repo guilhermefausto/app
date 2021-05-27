@@ -12,4 +12,6 @@ router.post('/contacts/',middlewaresCommons.validateAuth, validateContactSchema,
 
 router.patch('/contacts/:id',middlewaresCommons.validateAuth, validateUpdateContactSchema, controller.setContact);
 
+router.delete('/contacts/:id',middlewaresCommons.validateAuth, controller.deleteContact);
+
 export default router;

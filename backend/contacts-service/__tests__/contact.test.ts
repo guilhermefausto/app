@@ -5,6 +5,7 @@ import repository from '../src/models/contactRepository';
 import accountsApp from '../../accounts-service/src/app';
 import accounts from '../../accounts-service/src/controllers/accounts';
 import {beforeAll, afterAll, describe, it, expect} from '@jest/globals';
+import { ContactStatus } from '../src/models/contactStatus';
 
 const testEmail = 'jest@contacts.com';
 const testEmail2 = 'jest2@contacts.com'; 
@@ -54,14 +55,16 @@ afterAll(async ()=> {
     await repository.removeByEmail(testEmail2,testAccountId);
 
     //remove a account criada no teste
-    await request(accountsApp)
-            .delete('/accounts/'+testAccountId)
-            .set('x-access-token',jwt);
+    const deleteResponse = await request(accountsApp)
+                                .delete(`/accounts/${testAccountId}?force=true`)
+                                .set('x-access-token',jwt);
+    console.log(`deleteResponse: ${deleteResponse.status}`);
     
     //faz logout
-    await request(accountsApp)
-            .post('/accounts/logout')
-            .set('x-access-token',jwt);
+    const logoutResponse = await request(accountsApp)
+                                .post('/accounts/logout')
+                                .set('x-access-token',jwt);
+    console.log(`logoutResponse: ${logoutResponse.status}`)                            
 
 })
 
@@ -251,6 +254,34 @@ describe('Testando rotas do contacts',()=>{
             .send(payload);
         
         expect(resultado.status).toEqual(400);
+    }),
+    
+    //Contato excluido com sucesso, soft delete
+    it('DELETE /contacts/:id - Deve retornar statusCode 200', async() => {
+        const resultado = await request(app)
+            .delete('/contacts/'+testContactId)
+            .set('x-access-token',jwt);    
+ 
+        expect(resultado.status).toEqual(200);
+        expect(resultado.body.status).toEqual(ContactStatus.REMOVED);
+    }),
+
+    //Contato excluido com sucesso, hard delete, no banco
+    it('DELETE /contacts/:id?force=true - Deve retornar statusCode 200', async() => {
+        const resultado = await request(app)
+            .delete(`/contacts/${testContactId}?force=true`)
+            .set('x-access-token',jwt);
+ 
+        expect(resultado.status).toEqual(200);
+    }),    
+
+    //Erro ao excluir um contato, id inválido
+    it('DELETE /contacts/:id - Deve retornar statusCode 403', async() => {
+        const resultado = await request(app)
+            .delete('/contacts/-1')
+            .set('x-access-token',jwt);
+        
+        expect(resultado.status).toEqual(403);
     })    
 
 })

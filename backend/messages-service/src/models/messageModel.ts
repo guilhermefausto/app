@@ -1,13 +1,13 @@
 import Sequelize, {Model, Optional} from 'sequelize';
 import database from 'ms-commons/data/db';
-import {IContact} from './contact';
+import {IMessage} from './message';
 
 
-interface IContactAttributes extends Optional<IContact,"id">{}
+interface IMessageAttributes extends Optional<IMessage,"id">{}
 
-export interface IContactModel extends Model<IContact,IContactAttributes>,IContact{}
+export interface IMessageModel extends Model<IMessage,IMessageAttributes>,IMessage{}
 
-export default database.define<IContactModel>('contact',{
+const Message = database.define<IMessageModel>('message',{
     id: {
         type: Sequelize.INTEGER.UNSIGNED,
         allowNull: false,
@@ -18,16 +18,16 @@ export default database.define<IContactModel>('contact',{
         type: Sequelize.INTEGER.UNSIGNED,
         allowNull:false
     },
-    name: {
-        type: Sequelize.STRING(150),
-        allowNull: true
-    },
-    email: {
+    subject: {
         type: Sequelize.STRING(150),
         allowNull: false
     },
-    phone: {
-        type: Sequelize.STRING(11),
+    body: {
+        type: Sequelize.TEXT,
+        allowNull: false
+    },
+    sendDate: {
+        type: Sequelize.DATE,
         allowNull: true
     },
     status: {
@@ -41,3 +41,6 @@ export default database.define<IContactModel>('contact',{
         fields: ['accountId','email']
     }]
 });
+
+Message.sync();
+export default Message;

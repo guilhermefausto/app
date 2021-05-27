@@ -2,15 +2,17 @@ import {Request, Response} from 'express';
 import repository from '../models/contactRepository';
 import controllerCommons from 'ms-commons/api/controllers/controller';
 import {Token} from 'ms-commons/api/auth';
-import { IContact } from 'src/models/contact';
+import { IContact } from '../models/contact';
+import { ContactStatus } from '../models/contactStatus';
 
 async function getContacts(req:Request, res: Response, next: any) {
     try {
+        const includeRemoved = req.query.includeRemoved == 'true';
         //Pega o id sempre do token da requisição, para garantir que a consulta seja feita 
         //exatamente de quem estiver autenticado
     
         const token = controllerCommons.getToken(res) as Token;
-        const contacts = await repository.findAll(token.accountId);
+        const contacts = await repository.findAll(token.accountId,includeRemoved);
 
         res.json(contacts);    
     } catch (error) {
@@ -68,4 +70,32 @@ async function setContact(req:Request, res: Response, next: any) {
     }
 }
 
-export default {getContacts, getContact, addContact, setContact};
+async function deleteContact(req: Request, res: Response, next: any){
+    try {
+        const contactId = parseInt(req.params.id);
+        if(!contactId) return res.status(400).json({message: 'id is required'});
+
+        const token = controllerCommons.getToken(res) as Token;
+        
+
+        if(req.query.force === 'true'){
+            await repository.removeById(contactId,token.accountId);
+            res.sendStatus(200);
+        }
+        else{
+            const contactParams = {
+                status: ContactStatus.REMOVED
+            } as IContact;
+            const updatedContact = await repository.set(contactId,contactParams,token.accountId);
+            if(updatedContact)
+                res.json(updatedContact);
+            else
+                res.sendStatus(403);
+        }
+    } catch (error) {
+        console.log(`deleteContact ${error}`);
+        res.sendStatus(400);
+    }
+}
+
+export default {getContacts, getContact, addContact, setContact, deleteContact};

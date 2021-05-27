@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "es6",                          
+    "module": "commonjs",                     
+    "outDir": "./dist/",                        
+    "strict": true,                           
+    "moduleResolution": "node",            
+    "baseUrl": ".",                       
+    "paths": {
+      "ms-commons/*": ["../__commons__/src/*"]
+    },                           
+    "rootDirs": ["./src/","../__commons__/src/"],                        
+    "typeRoots": ["./node_modules/@jest/","./node_modules/@types/"],                       
+    "esModuleInterop": true,                  
+    "forceConsistentCasingInFileNames": true  
+  },
+  "exclude": ["__tests__"]
+}
