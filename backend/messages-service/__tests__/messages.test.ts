@@ -22,21 +22,24 @@ beforeAll(async ()=>{
         password: testPassword,
         domain: 'jest.com'
     }
-    const account = await request(accountsApp)
+    const accountResponse = await request(accountsApp)
                           .post('/accounts/')
                           .send(testAccount);
-    testAccountId = account.body.id;
+    console.log(`accountResponse: ${accountResponse.status}`);
+    testAccountId = accountResponse.body.id;
     
     //Login da account criada
-    const result = await request(accountsApp)
+    const loginResponse = await request(accountsApp)
             .post('/accounts/login')
             .send({
                 email: testEmail,
                 password: testPassword
             });
-    jwt = result.body.token;
-    //Fim criação account
+    console.log(`loginResponse: ${loginResponse.status}`);
+    jwt = loginResponse.body.token;
+    //Fim do login
 
+    //Criação da Message
     const testMessage = {
         accountId: testAccountId,
         body: "corpo da mensagem",
@@ -46,7 +49,7 @@ beforeAll(async ()=>{
     const addResult = await repository.add(testMessage, testAccountId);
     console.log(`addResult ${addResult}`);
     testMessageId = addResult.id!;
-
+    //Fim criação da Message
 })
 
 afterAll(async ()=> {

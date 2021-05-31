@@ -4,6 +4,9 @@ import controllerCommons from 'ms-commons/api/controllers/controller';
 import {Token} from 'ms-commons/api/auth';
 import { IMessage } from '../models/message';
 import { MessageStatus } from '..//models/messageStatus';
+import {getContacts} from 'ms-commons/clients/contactsService';
+import queueService from '../queueService';
+import {IQueueMessage} from '../models/queueMessage';
 
 async function getMessages(req:Request, res: Response, next: any) {
     try {
@@ -98,6 +101,44 @@ async function deleteMessage(req: Request, res: Response, next: any){
     }
 }
 
+async function sendMessage(req: Request, res: Response, next: any) {
+    try {
+        const token = controllerCommons.getToken(res) as Token;
+        
+        //obtendo a mensagem
+        let messageId = parseInt(req.params.id);
+        if(!messageId) return res.status(400).json({message: 'id is required'});
+        const message = repository.findById(messageId,token.accountId);
+        if(!message) return res.sendStatus(403);
+        
+        //obtendo os contatos
+        const contacts = await getContacts(token.jwt!);
+        if(!contacts || contacts.length === 0) return res.sendStatus(400);
+
+        //enviando mensagens para fila
+        const promisses = contacts.map(item=>{
+            return queueService.sendMessage({
+                accountId: token.accountId,
+                contactId: item.id,
+                messageId: messageId
+            }as IQueueMessage)
+        })
+        await Promise.all(promisses);
+
+        //atualizando a mensagem
+        const messageParams = { status:MessageStatus.SENT, sendDate: new Date() } as IMessage;
+        const updatedMessage = await repository.set(messageId,messageParams,token.accountId);
+        if(updatedMessage)
+            return res.json(updatedMessage)
+        else
+            res.sendStatus(403);
+
+    } catch (error) {
+        console.log(`sendMessage ${error}`);
+        res.sendStatus(400);
+    }
+}
 
 
-export default {getMessages, getMessage, addMessage, setMessage, deleteMessage};
+
+export default {getMessages, getMessage, addMessage, setMessage, deleteMessage, sendMessage};

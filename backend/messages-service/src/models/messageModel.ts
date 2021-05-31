@@ -35,12 +35,7 @@ const Message = database.define<IMessageModel>('message',{
         allowNull: false,
         defaultValue: 100
     }
-},{
-    indexes: [{
-        unique: true,
-        fields: ['accountId','email']
-    }]
 });
 
-Message.sync();
+//Message.sync();
 export default Message;
