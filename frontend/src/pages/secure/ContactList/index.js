@@ -30,6 +30,7 @@ function RenderTable({contacts}){
                 </tr>
             </thead>
             <tbody>
+                {contacts.length === 0 && <RenderEmptyRow />}
                 {contacts.map((item) => <RenderLine key={item.id} contact={item} />)}
             </tbody>
         </Table>
@@ -82,7 +83,6 @@ class Contacts extends React.Component{
                             </Col>
                         </Row>
                         <p>Relação de contatos cadastrados.</p>
-                        {contacts.length === 0 && <RenderEmptyRow />}
                         {!isLoading && <RenderTable contacts={contacts}/>}
                     </Container>
                 </PageContent>

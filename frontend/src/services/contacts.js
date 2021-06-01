@@ -25,6 +25,13 @@ class ContactsService{
         const result = await this.api.delete(`contacts/${contactId}`);
         return result;
     }
+
+    async send(messageId) {
+        const result = await this.api.post(`messages/${messageId}/send`);
+        return result;
+    }
+
+
 }
 
 export default ContactsService;
