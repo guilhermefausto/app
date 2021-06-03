@@ -46,7 +46,7 @@ describe('Testando rotas do accounts',()=>{
             name: 'Jest 2',
             email: testEmail2,
             password: '123456',
-            domain: 'jest@jest.com'
+            domain: 'jest.com'
         }
 
         const resultado = await request(app)
@@ -78,8 +78,9 @@ describe('Testando rotas do accounts',()=>{
     it('PATCH /accounts/:id - Deve retornar statusCode 200', async ()=>{
 
         const payload ={
-            name: 'Jest Update',
+            name: 'Jest Update'
         }
+        console.log(testId+' - '+payload.name);
 
         const resultado = await request(app)
             .patch('/accounts/'+testId)

@@ -42,11 +42,7 @@ const accountUpdateSchema = Joi.object({
     status: Joi.number()
                .integer()
                .min(100)
-               .max(400),
-    
-    domain: Joi.string()
-               .min(5)
-               .max(150)            
+               .max(400)         
 })
 
 const loginSchema = Joi.object({

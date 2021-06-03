@@ -1,8 +1,17 @@
 import {accountSchema,loginSchema, accountUpdateSchema} from './../models/accountSchemas';
+import {accountEmailSchema, accountEmailUpdateSchema} from '../models/accountEmailSchemas';
 import {Request,Response} from 'express';
 import commonsMiddleware from 'ms-commons/api/routes/middlewares';
 import controllerCommons from 'ms-commons/api/controllers/controller';
 import {Token} from 'ms-commons/api/auth';
+
+function validateAccountEmailSchema(req: Request, res: Response, next:any) {
+    return commonsMiddleware.validateSchema(accountEmailSchema,req,res,next)
+}
+
+function validateAccountEmailUpdateSchema(req: Request, res: Response, next:any) {
+    return commonsMiddleware.validateSchema(accountEmailUpdateSchema,req,res,next)
+}
 
 function validateAccountSchema(req: Request, res: Response, next:any) {
     return commonsMiddleware.validateSchema(accountSchema,req,res,next);
@@ -31,4 +40,12 @@ function validateAuthorization(req: Request, res: Response, next:any) {
 }
 
 
-export {validateAccountSchema,validateLoginSchema, validateUpdateAccountSchema, validateAuthentication, validateAuthorization}
+export {
+    validateAccountSchema,
+    validateLoginSchema, 
+    validateUpdateAccountSchema, 
+    validateAuthentication, 
+    validateAuthorization,
+    validateAccountEmailSchema,
+    validateAccountEmailUpdateSchema
+}

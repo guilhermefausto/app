@@ -1,3 +1,4 @@
+import { AccountSettings } from 'ms-commons/clients/emailService';
 import {AccountStatus} from './accountStatus'
 
 export interface IAccount{
@@ -6,5 +7,6 @@ export interface IAccount{
     email: string,
     password: string,
     status?: AccountStatus,
-    domain: string
+    domain: string,
+    settings?: AccountSettings
 }
