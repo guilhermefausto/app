@@ -12,9 +12,12 @@ import DashboardPage from './../pages/secure/Dashboard';
 import ContactsListPage from './../pages/secure/ContactList';
 import ContactsAddPage from './../pages/secure/ContactAdd';
 import ContactsDetailPage from './../pages/secure/ContactDetail';
-import MessageListPage from './../pages/secure/MessageList'
-import MessageAddPage from './../pages/secure/MessageAdd'
-import MessageDetailPage from './../pages/secure/MessageDetail'
+import MessageListPage from './../pages/secure/MessageList';
+import MessageAddPage from './../pages/secure/MessageAdd';
+import MessageDetailPage from './../pages/secure/MessageDetail';
+import SettingsDetailsPage from './../pages/secure/SettingsDetails';
+import SettingsEmailAddPage from './../pages/secure/SettingsEmailAdd';
+
 import RoutePrivate from './route-wrapper';
 
 export default function Routes(){
@@ -30,6 +33,9 @@ export default function Routes(){
                 <RoutePrivate exact path="/messages" component={MessageListPage}/>
                 <RoutePrivate exact path="/messages/add" component={MessageAddPage}/>
                 <RoutePrivate exact path="/messages/:messageId" component={MessageDetailPage}/>
+
+                <RoutePrivate exact path="/settings" component={SettingsDetailsPage}/>
+                <RoutePrivate exact path="/settings/email/add" component={SettingsEmailAddPage}/>
 
                 <Route exact path="/signin" component={SignInPage}/>
                 <Route exact path="/signup" component={SignUpPage}/>

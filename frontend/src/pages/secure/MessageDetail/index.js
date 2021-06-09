@@ -3,6 +3,7 @@ import Header from '../../../shared/header';
 import { PageContent } from '../../../shared/styles';
 import { Container, Badge, Button } from 'react-bootstrap';
 import MessageService from '../../../services/messages';
+import SettingsService from '../../../services/settings';
 import { withRouter } from 'react-router';
 
 function RenderMessageStatus({status}){
@@ -29,6 +30,17 @@ function RenderMessageStatus({status}){
     )
 }
 
+/*function RenderMessage({message}){
+    return(
+        <>
+            <RenderMessageStatus status={message.status} />
+            <p><b>Assunto:</b><br/>{message.subject}</p>
+            <p><b>Email do remetente:</b><br/>{message.fromName}({message.fromEmail})</p>
+            <p><b>Conteúdo:</b><br/>{message.body}</p>
+        </>
+    )
+}*/
+
 function RenderMessage({message}){
     return(
         <>
@@ -49,6 +61,21 @@ class MessageDetail extends React.Component{
             message: null
         }
     }
+
+    /*async componentDidMount(){
+        const {params: {messageId}} = this.props.match;
+        
+        const messageService = new MessageService();
+        const settingsService = new SettingsService();
+
+        const message = await messageService.getOne(messageId);
+        const {name: fromName, email: fromEmail} = await settingsService.getOneAccountEmail(message.accountEmailId)
+
+        this.setState({
+            //esses ... quer dizer que pega todo o objeto de message e adiciona mais as propriedades depois da virgula
+            message: {...message,fromName,fromEmail}, 
+            isLoading: false})
+    }*/
 
     async componentDidMount(){
         const {params: {messageId}} = this.props.match;

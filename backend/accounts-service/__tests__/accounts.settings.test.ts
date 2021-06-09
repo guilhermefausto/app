@@ -20,7 +20,7 @@ const testEmail = 'jest@settings.com';
 const hashPassword = '$2a$10$ez0VDj0Gh.tRC/jFxoLIieuo2cgPDhVvWLQl5T0dqW3LI0GPLA4Fm'; //senha 123456 
 
 
-describe('Testando as todas do accounts/settings',() => {
+describe('Testando as rotas do accounts/settings',() => {
 
     beforeAll(async () => {
         jest.setTimeout(10000);
@@ -89,7 +89,7 @@ let testAccountEmailId2:number;
 let testAccountId2:number;
 let jwt2:string;
 
-describe('Testando as todas do accounts/settings/accountEmails',() => {
+describe('Testando as rotas do accounts/settings/accountEmails',() => {
 
     beforeAll(async () => {
         jest.setTimeout(10000);

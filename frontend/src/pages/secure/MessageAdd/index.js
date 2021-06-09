@@ -3,8 +3,10 @@ import Header from '../../../shared/header';
 import { PageContent } from '../../../shared/styles';
 import { Container, Button, Form, Alert, Row, Col, FormGroup, FormLabel, FormControl} from 'react-bootstrap';
 import MessageService from '../../../services/messages';
+import SeetingsService from '../../../services/settings';
 import { Link, withRouter} from 'react-router-dom';
 import MessagesService from '../../../services/messages';
+import SettingsService from '../../../services/settings';
 
 class MessageAdd extends React.Component{
     constructor(props){
@@ -14,19 +16,37 @@ class MessageAdd extends React.Component{
             isLoading: true,
             subject: '',
             body: '',
-            error: ''
+            error: '',
+            accountEmailId: '',
+            emailsFrom: []
         }
+    }
+
+    async componentDidMount(){
+        const service = new SettingsService();
+
+        this.setState({isLoading:true});
+        const result = await service.getAllAccountEmail();
+        this.setState({
+            isLoading:false,
+            emailsFrom: result
+        });
+        console.log(this.state);
+
     }
 
     handleSave = async(event) => {
         event.preventDefault();
 
-        const {subject,body} = this.state;
-        if(!subject || !body){
+        const {subject,body, accountEmailId} = this.state;
+
+        if(!subject || !body || !accountEmailId){
             this.setState({error: 'Informe todos os campos para adicionar a mensagem'});
         }else{
             try {
                 const service = new MessagesService();
+                //rever classes model messages faltando accountEmailId
+                //await service.add({subject,body,accountEmailId});
                 await service.add({subject,body});
                 this.props.history.push("/messages");
             } catch (error) {
@@ -42,6 +62,7 @@ class MessageAdd extends React.Component{
     }
 
     render(){
+        const { isLoading, emailsFrom, accountEmailId} = this.state;
         return (
             <>
                 <Header/>
@@ -57,6 +78,23 @@ class MessageAdd extends React.Component{
                                     placeholder="Informe o assunto da mensagem"
                                     onChange={e => this.setState({subject: e.target.value})}
                                 />
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label>Remetente:</Form.Label>
+                                <Form.Control
+                                    as="select"
+                                    disabled={isLoading}
+                                    value={!isLoading && accountEmailId}
+                                    onChange={e => this.setState({accountEmailId: e.target.value})}
+                                >
+                                    <option key="0" value="">Selecione</option>
+                                    {!isLoading && (
+                                        emailsFrom.map(item => (
+                                            <option key={item.id} value={item.id}>{item.email}</option>
+                                        ))
+                                    )}
+                                </Form.Control>
+
                             </Form.Group>
                             <Form.Group>
                                 <Form.Label>Corpo da mensagem</Form.Label>

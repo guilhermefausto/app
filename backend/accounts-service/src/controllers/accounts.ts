@@ -249,7 +249,10 @@ async function getAccountEmails(req: Request, res: Response, next: any){
             emails = accountEmails.map(item => item.email)
 
         const settings = await emailService.getEmailSettings(emails);
-        res.json(settings);
+        accountEmails.forEach(item => {
+            item.settings = settings.find(s => s.email === item.email);
+        })
+        res.json(accountEmails);
     } catch (error) {
         console.log(`getAccountEmails: ${error}`);
         res.sendStatus(400);
