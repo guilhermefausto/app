@@ -3,7 +3,7 @@ import {IAccount} from '../models/account';
 import repository from '../models/accountRepository';
 import auth from '../auth';
 import controllerCommons from 'ms-commons/api/controllers/controller';
-import {Token} from 'ms-commons/api/auth';
+import {Token} from 'ms-commons/api/auth/accountsAuth';
 import { AccountStatus } from '../models/accountStatus';
 import emailService, { AccountSettings } from 'ms-commons/clients/emailService';
 import accountRepository from '../models/accountRepository';
@@ -261,18 +261,22 @@ async function getAccountEmails(req: Request, res: Response, next: any){
 
 async function getAccountEmail(req: Request, res: Response, next: any){
     try {
-        const id = parseInt(req.params.id);
-        if(!id) return res.sendStatus(400);
-
-        const token = controllerCommons.getToken(res) as Token;
-        const accountEmail = await accountEmailRepository.findById(id, token.accountId,true) as IAccountEmail
+        let accountId = parseInt(req.params.accountId);
+        if(!accountId){
+            const token = controllerCommons.getToken(res) as Token;
+            accountId = token.accountId;
+        }
+        const accountEmailId = parseInt(req.params.accountEmailId);
+        if(!accountId || !accountEmailId) return res.status(400).json({message:'both id are required'});
+        
+        const accountEmail = await accountEmailRepository.findById(accountEmailId, accountId,true) as IAccountEmail
         if(!accountEmail) return res.sendStatus(404);
 
         const settings = await emailService.getEmailSettings([accountEmail.email]);
         if(!settings || settings.length === 0) return res.sendStatus(404);
         
         accountEmail.settings = settings[0];
-        res.json(accountEmail);
+        res.status(200).json(accountEmail);
     } catch (error) {
         console.log(`getAccountEmail: ${error}`);
         res.sendStatus(400);

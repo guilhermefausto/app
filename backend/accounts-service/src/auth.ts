@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
-import authCommons, {Token} from 'ms-commons/api/auth';
+import authCommons, {Token} from 'ms-commons/api/auth/accountsAuth';
 import path from 'path';
 
 const privateKey = fs.readFileSync(path.join(authCommons.findKeysPath(__dirname), 'private.key'),'utf-8');

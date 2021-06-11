@@ -1,14 +1,16 @@
 import {Router} from 'express';
 import accountsController from '../controllers/accounts';
-import {validateAccountSchema,validateLoginSchema, validateUpdateAccountSchema, validateAuthentication, validateAuthorization, validateAccountEmailSchema, validateAccountEmailUpdateSchema} from './middlewares';
+import {validateAccountSchema,validateLoginSchema, validateUpdateAccountSchema, validateAuthentication, validateAuthorization, validateAccountEmailSchema, validateAccountEmailUpdateSchema, validateMSAuthentication} from './middlewares';
 
 const router = Router();
 
-router.get('/accounts/settings/accountEmails/:id', validateAuthentication, accountsController.getAccountEmail);
+router.get('/accounts/settings/accountEmails/:accountEmailId', validateAuthentication, accountsController.getAccountEmail);
 
 router.get('/accounts/settings/accountEmails', validateAuthentication, accountsController.getAccountEmails);
 
 router.get('/accounts/settings', validateAuthentication, accountsController.getAccountSettings);
+
+router.get('/accounts/:accountId/accountEmails/:accountEmailId', validateMSAuthentication, accountsController.getAccountEmail);
 
 router.get('/accounts/:id',validateAuthentication, validateAuthorization, accountsController.getAccount);
 

@@ -6,7 +6,7 @@ function findAll(accountId:number, includeRemoved:boolean) {
     if(includeRemoved)
         return messageModel.findAll<IMessageModel>({where:{accountId}});
     else
-        return messageModel.findAll<IMessageModel>({where:{accountId, status:[MessageStatus.SENT,MessageStatus.SUBSCRIBED]}});
+        return messageModel.findAll<IMessageModel>({where:{accountId, status:[MessageStatus.SENT,MessageStatus.CREATED]}});
 }
 
 async function findById(messageId:number, accountId: number) {

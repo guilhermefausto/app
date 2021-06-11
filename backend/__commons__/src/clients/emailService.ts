@@ -1,6 +1,8 @@
 import AWS, { SESV2 } from 'aws-sdk';
 AWS.config.update({region: process.env.AWS_SES_REGION})
 
+const EMAIL_ENCODING: string = 'UTF-8';
+
 export type EmailSetting = { email: string, verified: boolean};
 
 export type DnsRecord = { type: string, name: string, value: string, priority?: number}
@@ -145,11 +147,37 @@ async function canSendEmail(email:string) {
     return emailSetting && emailSetting.length > 0 && emailSetting[0].verified;
 }
 
+export type SendEmailResponse = { success: boolean, messageId?: string}
+
+async function sendEmail(fromName:string, fromAddress: string, toAddress: string, subject: string, body:string) {
+    if(!canSendEmail(fromAddress)) return { success: false } as SendEmailResponse;
+
+    const ses = new AWS.SESV2();
+    const params = {
+        Content: {
+            Simple: {
+                Body: {
+                    Html: { Data: body, Charset: EMAIL_ENCODING }
+                },
+                Subject: { Data: subject, Charset: EMAIL_ENCODING}
+            }
+        },
+        Destination: { ToAddresses: [toAddress]},
+        FeedbackForwardingEmailAddress: fromAddress,
+        FromEmailAddress: `${fromName} <${fromAddress}>`,
+        ReplyToAddress: [fromAddress]
+    }
+
+    const response = await ses.sendEmail(params).promise();
+    return {success: !!response.MessageId, messageId: response.MessageId } as SendEmailResponse;
+}
+
 export default {
     addEmailIdentity, 
     createAccountSettings, 
     getAccountSettings, 
     removeEmailIdentity,
     getEmailSettings,
-    canSendEmail
+    canSendEmail,
+    sendEmail
 };
