@@ -33,10 +33,20 @@ async function set(messageId:number,message: IMessage, accountId: number) {
     const originalMessage = await messageModel.findOne({where: {id: messageId, accountId: accountId}});
     if(!originalMessage) return null;
 
-    if(message.subject) originalMessage.subject = message.subject;
-    if(message.body) originalMessage.body = message.body;
-    if(message.status) originalMessage.status = message.status;
-    if(message.sendDate) originalMessage.sendDate = message.sendDate;
+    if(message.subject && message.subject !== originalMessage.subject) 
+        originalMessage.subject = message.subject;
+    
+    if(message.body && message.body !== originalMessage.body) 
+        originalMessage.body = message.body;
+    
+    if(message.accountEmailId && message.accountEmailId !== originalMessage.accountEmailId) 
+        originalMessage.accountEmailId = message.accountEmailId;    
+    
+    if(message.status && message.status !== originalMessage.status) 
+        originalMessage.status = message.status;
+    
+    if(message.sendDate && message.sendDate !== originalMessage.sendDate) 
+        originalMessage.sendDate = message.sendDate;
 
 
     const result = await originalMessage.save();

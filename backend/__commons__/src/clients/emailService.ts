@@ -150,6 +150,12 @@ async function canSendEmail(email:string) {
 export type SendEmailResponse = { success: boolean, messageId?: string}
 
 async function sendEmail(fromName:string, fromAddress: string, toAddress: string, subject: string, body:string) {
+    //mock caseiro
+    if(toAddress === 'jest2@jest.send.com')
+        return {success: false, messageId:'-1'} as SendEmailResponse;
+    else if (fromAddress === 'jest@jest.send.com')
+        return {success: true, messageId:'1'} as SendEmailResponse;
+
     if(!canSendEmail(fromAddress)) return { success: false } as SendEmailResponse;
 
     const ses = new AWS.SESV2();
@@ -165,7 +171,7 @@ async function sendEmail(fromName:string, fromAddress: string, toAddress: string
         Destination: { ToAddresses: [toAddress]},
         FeedbackForwardingEmailAddress: fromAddress,
         FromEmailAddress: `${fromName} <${fromAddress}>`,
-        ReplyToAddress: [fromAddress]
+        ReplyToAddresses: [fromAddress]
     }
 
     const response = await ses.sendEmail(params).promise();

@@ -96,7 +96,7 @@ async function deleteMessage(req: Request, res: Response, next: any){
             } as IMessage;
             const updatedMessage = await repository.set(messageId,messageParams,token.accountId);
             if(updatedMessage)
-                res.json(updatedMessage);
+                res.status(200).json(updatedMessage);
             else
                 res.sendStatus(403);
         }
@@ -114,7 +114,7 @@ async function scheduleMessage(req: Request, res: Response, next: any) {
         let messageId = parseInt(req.params.id);
         if(!messageId) return res.status(400).json({message: 'id is required'});
         
-        const message = repository.findById(messageId,token.accountId);
+        const message = await repository.findById(messageId,token.accountId);
         if(!message) return res.sendStatus(403);
         
         //obtendo os contatos
@@ -178,13 +178,13 @@ async function sendMessage(req: Request, res: Response, next: any) {
         const contact = await getContact(sending.contactId, sending.accountId);
         if(!contact) return res.status(404).json({message: 'contact not found'});
 
-        //pegando o accountEmail
+        //pegando o accountEmail(remetente)
         const accountEmail = await getAccountEmail(sending.accountId,message.accountEmailId);
         if(!accountEmail) return res.status(404).json({message: 'accountEmail not found'});
 
         //enviando o email
         const result = await emailService.sendEmail(accountEmail.name,accountEmail.email,contact.email,message.subject,message.body)
-        if(!result.success) return res.send(400).json({message: "Couldn't send the email message"});
+        if(!result.success) return res.status(400).json({message: "Couldn't send the email message"});
 
         sending.status = SendingStatus.SENT;
         sending.sendDate = new Date();

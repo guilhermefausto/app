@@ -12,7 +12,10 @@ const accountEmailSchema = Joi.object({
             .email()
             .min(8)
             .max(150)
-            .required()          
+            .required(),
+    accountId: Joi.number()
+                .integer()
+                .min(1)                  
 })
 
 const accountEmailUpdateSchema = Joi.object({

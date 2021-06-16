@@ -272,13 +272,13 @@ describe('Testando as rotas do accounts/settings/accountEmails',() => {
         expect(resultado.status).toEqual(422);
     }),
 
-    it('DELETE /accounts/settings/accountEmails/:id - Deve retornar statusCode 200',async () => {
+    it('DELETE /accounts/settings/accountEmails/:id - Deve retornar statusCode 204',async () => {
 
         const resultado = await request(app)
                                 .delete('/accounts/settings/accountEmails/'+testAccountEmailId2)
                                 .set('x-access-token',jwt2);
         
-        expect(resultado.status).toEqual(200);
+        expect(resultado.status).toEqual(204);
     }),
     
     it('DELETE /accounts/settings/accountEmails/:id - Deve retornar statusCode 400',async () => {

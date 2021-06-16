@@ -31,7 +31,6 @@ async function getContact(req:Request, res: Response, next: any) {
             const token = controllerCommons.getToken(res) as Token;
             accountId = token.accountId;
         }
-    
         const contact = await repository.findById(id,accountId);
     
         if(contact === null) return res.sendStatus(404);
@@ -85,7 +84,7 @@ async function deleteContact(req: Request, res: Response, next: any){
 
         if(req.query.force === 'true'){
             await repository.removeById(contactId,token.accountId);
-            res.sendStatus(200);
+            res.sendStatus(204);
         }
         else{
             const contactParams = {
@@ -93,9 +92,9 @@ async function deleteContact(req: Request, res: Response, next: any){
             } as IContact;
             const updatedContact = await repository.set(contactId,contactParams,token.accountId);
             if(updatedContact)
-                res.json(updatedContact);
+                res.status(200).json(updatedContact);
             else
-                res.sendStatus(403);
+                res.sendStatus(404);
         }
     } catch (error) {
         console.log(`deleteContact ${error}`);

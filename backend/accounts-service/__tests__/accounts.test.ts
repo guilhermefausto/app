@@ -160,12 +160,12 @@ describe('Testando rotas do accounts',()=>{
         expect(resultado.body.status).toEqual(AccountStatus.REMOVED);
     }),
 
-    it('DELETE /accounts/:id?force=true - Deve retornar statusCode 200', async() => {
+    it('DELETE /accounts/:id?force=true - Deve retornar statusCode 204', async() => {
         const resultado = await request(app)
             .delete(`/accounts/${testId}?force=true`)
             .set('x-access-token',jwt);
  
-        expect(resultado.status).toEqual(200);
+        expect(resultado.status).toEqual(204);
     }),    
 
     it('DELETE /accounts/:id - Deve retornar statusCode 403', async() => {

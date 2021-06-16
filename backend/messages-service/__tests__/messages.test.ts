@@ -1,26 +1,29 @@
 import request from 'supertest';
 import { IMessage } from '../src/models/message';
-import app from './../src/app';
+import app from '../src/app';
 import repository from '../src/models/messageRepository';
 import accountsApp from '../../accounts-service/src/app';
-import {beforeAll, afterAll, describe, it, expect} from '@jest/globals';
+import {beforeAll, afterAll, describe, it, expect, jest} from '@jest/globals';
 import { MessageStatus } from '../src/models/messageStatus';
+import { IAccountEmail } from '../../accounts-service/src/models/accountEmail';
 
-const testEmail = 'jest@contacts.com';
-const testEmail2 = 'jest2@contacts.com'; 
+const testEmail = 'jest@jest.test.com';
+const testEmail2 = 'jest2@jest.test.com'; 
 const testPassword = '123456';
 let jwt:string = '';
 let testAccountId: number = 0;
+let testAccountEmailId: number = 0;
 let testMessageId: number = 0;
 let testMessageId2: number = 0;
 
 beforeAll(async ()=>{
+    jest.setTimeout(10000);
     //Inicio criação account
     const testAccount = {
         name: 'Jest',
         email: testEmail,
         password: testPassword,
-        domain: 'jest.com'
+        domain: 'jest.test.com'
     }
     const accountResponse = await request(accountsApp)
                           .post('/accounts/')
@@ -39,11 +42,25 @@ beforeAll(async ()=>{
     jwt = loginResponse.body.token;
     //Fim do login
 
+    const testAccountEmail: IAccountEmail = {
+        name: 'Jest',
+        email: testEmail,
+        accountId: testAccountId
+    }
+    const accountEmailResponse = await request(accountsApp)
+        .put('/accounts/settings/accountEmails')
+        .send(testAccountEmail)
+        .set('x-access-token',jwt);
+    console.log(`accountEmailResponse: ${accountEmailResponse.status}`);
+    if(accountEmailResponse.status != 201) throw new Error();
+    testAccountEmailId = accountEmailResponse.body.id;    
+
     //Criação da Message
     const testMessage = {
         accountId: testAccountId,
         body: "corpo da mensagem",
-        subject: "assunto da mensagem"
+        subject: "assunto da mensagem",
+        accountEmailId: testAccountEmailId
     } as IMessage;
 
     const addResult = await repository.add(testMessage, testAccountId);
@@ -53,16 +70,22 @@ beforeAll(async ()=>{
 })
 
 afterAll(async ()=> {
-    
+    jest.setTimeout(10000);
+
     const removeResult = await repository.removeById(testMessageId,testAccountId);
     const removeResult2 = await repository.removeById(testMessageId2,testAccountId);
     console.log(`removeResult: ${removeResult}:${removeResult2}`);
 
+    const deleteAccountEmailResponse = await request(accountsApp)
+        .delete(`/accounts/settings/accountEmails/${testAccountEmailId}/?force=true`)
+        .set('x-access-token',jwt);
+    console.log(`deleteAccountEmailResponse: ${deleteAccountEmailResponse.status}`);    
+
     //remove a account criada no teste
-    const deleteResponse = await request(accountsApp)
+    const deleteAccountResponse = await request(accountsApp)
                                 .delete(`/accounts/${testAccountId}?force=true`)
                                 .set('x-access-token',jwt);
-    console.log(`deleteResponse: ${deleteResponse.status}`);
+    console.log(`deleteAccountResponse: ${deleteAccountResponse.status}`);
     
     //faz logout
     const logoutResponse = await request(accountsApp)
@@ -134,6 +157,7 @@ describe('Testando rotas do messages',()=>{
             accountId: testAccountId,
             body: 'Outro Corpo da mensagem',
             subject: 'Outro Assunto da mensagem',
+            accountEmailId: testAccountEmailId
         } as IMessage
 
         const resultado = await request(app)
@@ -258,12 +282,12 @@ describe('Testando rotas do messages',()=>{
     }),
 
     //Mensagem excluida com sucesso, hard delete, no banco
-    it('DELETE /messages/:id?force=true - Deve retornar statusCode 200', async() => {
+    it('DELETE /messages/:id?force=true - Deve retornar statusCode 204', async() => {
         const resultado = await request(app)
             .delete(`/messages/${testMessageId}?force=true`)
             .set('x-access-token',jwt);
  
-        expect(resultado.status).toEqual(200);
+        expect(resultado.status).toEqual(204);
     }),    
 
     //Erro ao excluir uma mensagem, id inválido

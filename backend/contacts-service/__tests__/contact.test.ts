@@ -41,7 +41,8 @@ beforeAll(async ()=>{
     const testContact = {
         name: 'Jest',
         email: testEmail,
-        phone: '22999626792'
+        phone: '22999626792',
+        accountId: testAccountId
     } as IContact;        
 
     const result2 = await repository.add(testContact, testAccountId);
@@ -267,21 +268,21 @@ describe('Testando rotas do contacts',()=>{
     }),
 
     //Contato excluido com sucesso, hard delete, no banco
-    it('DELETE /contacts/:id?force=true - Deve retornar statusCode 200', async() => {
+    it('DELETE /contacts/:id?force=true - Deve retornar statusCode 204', async() => {
         const resultado = await request(app)
             .delete(`/contacts/${testContactId}?force=true`)
             .set('x-access-token',jwt);
  
-        expect(resultado.status).toEqual(200);
+        expect(resultado.status).toEqual(204);
     }),    
 
     //Erro ao excluir um contato, id inválido
-    it('DELETE /contacts/:id - Deve retornar statusCode 403', async() => {
+    it('DELETE /contacts/:id - Deve retornar statusCode 404', async() => {
         const resultado = await request(app)
             .delete('/contacts/-1')
             .set('x-access-token',jwt);
         
-        expect(resultado.status).toEqual(403);
+        expect(resultado.status).toEqual(404);
     })    
 
 })

@@ -146,7 +146,7 @@ async function deleteAccount(req: Request, res: Response, next: any){
 
         if(req.query.force === 'true'){
             await repository.remove(accountId);
-            res.sendStatus(200);
+            res.sendStatus(204);
         }
         else{
             const accountParams = {
@@ -156,9 +156,9 @@ async function deleteAccount(req: Request, res: Response, next: any){
 
             if(updatedAccount != null){
                 updatedAccount.password = '';
-                res.json(updatedAccount);
+                res.status(200).json(updatedAccount);
             } 
-            else res.end();
+            else res.sendStatus(404);
         }
     } catch (error) {
         console.log(`deleteAccount ${error}`);
@@ -252,7 +252,7 @@ async function getAccountEmails(req: Request, res: Response, next: any){
         accountEmails.forEach(item => {
             item.settings = settings.find(s => s.email === item.email);
         })
-        res.json(accountEmails);
+        res.status(200).json(accountEmails);
     } catch (error) {
         console.log(`getAccountEmails: ${error}`);
         res.sendStatus(400);
@@ -319,7 +319,7 @@ async function deleteAccountEmail(req: Request, res: Response, next: any){
         await emailService.removeEmailIdentity(accountEmail.email);
         await accountEmailRepository.remove(accountEmailId,token.accountId)
 
-        res.sendStatus(200);
+        res.sendStatus(204);
 
     } catch (error) {
         console.log(`deleteAccount ${error}`);

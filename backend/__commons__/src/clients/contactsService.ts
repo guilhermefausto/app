@@ -31,7 +31,7 @@ export async function getContact(contactId:number, accountId:number) {
                 'x-access-token': await microserviceAuth.sign({accountId,contactId})
             }
         }
-        const response = await axios.get(`${process.env.CONTACTS_API}/contacts/${contactId}/account/${accountId}`,config);
+        const response = await axios.get(`${process.env.CONTACTS_API}/contacts/${contactId}/accounts/${accountId}`,config);
         if(response.status !== 200) return null;
 
         return response.data as IContact;

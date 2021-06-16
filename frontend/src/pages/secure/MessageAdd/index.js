@@ -46,8 +46,8 @@ class MessageAdd extends React.Component{
             try {
                 const service = new MessagesService();
                 //rever classes model messages faltando accountEmailId
-                //await service.add({subject,body,accountEmailId});
-                await service.add({subject,body});
+                await service.add({subject,body,accountEmailId});
+                //await service.add({subject,body});
                 this.props.history.push("/messages");
             } catch (error) {
                 this.setState({error: 'Houve um erro ao salvar a mensagem'})
