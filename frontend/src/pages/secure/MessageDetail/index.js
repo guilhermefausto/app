@@ -19,7 +19,7 @@ function RenderMessageStatus({status}){
         case 300: statusName = {title: 'CRIADA', css:'secondary'}
             break;        
     
-        default: statusName = {title: 'INDEFINIDO', css:'light'}
+        default: statusName = {title: 'INDEFINIDO', css:'primary'}
             break;
     }
 
@@ -62,7 +62,7 @@ class MessageDetail extends React.Component{
         }
     }
 
-    /*async componentDidMount(){
+    async componentDidMount(){
         const {params: {messageId}} = this.props.match;
         
         const messageService = new MessageService();
@@ -75,16 +75,16 @@ class MessageDetail extends React.Component{
             //esses ... quer dizer que pega todo o objeto de message e adiciona mais as propriedades depois da virgula
             message: {...message,fromName,fromEmail}, 
             isLoading: false})
-    }*/
+    }
 
-    async componentDidMount(){
+    /*async componentDidMount(){
         const {params: {messageId}} = this.props.match;
         
         const service = new MessageService();
         const result = await service.getOne(messageId);
 
         this.setState({message: result, isLoading: false})
-    }
+    }*/
 
     handleSendMessage = async (messageId) => {
         this.setState({
@@ -95,7 +95,7 @@ class MessageDetail extends React.Component{
 
         this.setState({isSending: false})
 
-        this.props.history.push('messages');
+        this.props.history.push('/messages');
     }
 
     render(){

@@ -143,9 +143,18 @@ async function scheduleMessage(req: Request, res: Response, next: any) {
             }
         })
 
-        //enviando mensagens para fila
+        //enviando mensagens para fila SQS
         const promises = queueService.sendMessageBacth(messages)
-        await Promise.all(promises);
+        const resultPromises = await Promise.all(promises);
+        console.log(`ResultPromises: ${resultPromises}`)
+        if(resultPromises[0].Failed.length > 0){
+            //Em caso de erro ao enviar para SQS exclui as sendings do banco
+            sendings.map(async item =>{
+                await sendingRepository.removeById(item.id!,item.accountId);
+            })
+            throw new Error(`${resultPromises[0].Failed[0].Message}`)
+        } 
+            
 
         //atualizando a mensagem
         const messageParams = { status:MessageStatus.SCHEDULED, sendDate: new Date() } as IMessage;
@@ -206,3 +215,19 @@ async function sendMessage(req: Request, res: Response, next: any) {
 }
 
 export default {getMessages, getMessage, addMessage, setMessage, deleteMessage, scheduleMessage, sendMessage};
+
+/*{"ResponseMetadata":
+    {
+        "RequestId":"3be55750-3f3e-54c3-89ba-0e16e0c1f595"
+    },
+    "Successful":
+        [
+            {
+                "Id":"c356eb85-a50a-4878-9f78-2aaa3a203b98","MessageId":"2da78e62-8939-4935-ba1d-78d287092ab8","MD5OfMessageBody":"e710009e976c521e6a32c5b0179dc431","MD5OfMessageSystemAttributes":"d41d8cd98f00b204e9800998ecf8427e"
+            },
+            {
+                "Id":"05eacd9a-83c3-4e4e-a600-90c38ef89abc","MessageId":"ce3c2e01-a607-429f-b18f-b1e57220b0ee","MD5OfMessageBody":"1ac1e236101fd9a6329ad75c0b6bb27b","MD5OfMessageSystemAttributes":"d41d8cd98f00b204e9800998ecf8427e"
+            }
+        ],
+    "Failed":[]
+}*/

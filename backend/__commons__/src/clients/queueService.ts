@@ -29,6 +29,7 @@ function sendMessageBacth(messages:any[]) {
             return {
                 Id:item.id,
                 MessageBody: JSON.stringify(item),
+                //Esse parametro abaixo é usado somente nas filas .fifo
                 MessageGroupId: `${process.env.AWS_MESSAGE_GROUP}`
             }
         })

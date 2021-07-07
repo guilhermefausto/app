@@ -2,7 +2,7 @@ import React from 'react';
 import Header from '../../../shared/header';
 import {PageContent} from '../../../shared/styles';
 import { Container, Table, Row, Col, Badge } from 'react-bootstrap';
-import { Link, withRouter, userRouteMatch, useRouteMatch} from 'react-router-dom';
+import { Link, withRouter, useRouteMatch} from 'react-router-dom';
 import MessagesService from '../../../services/messages';
 
 function RenderMessageStatus({status}){
@@ -15,7 +15,7 @@ function RenderMessageStatus({status}){
         case 200: statusName = {title: 'ENVIADA', css:'success'}
             break;
         
-        case 300: statusName = {title: 'CRIADA', css:'secondary'}
+        case 150: statusName = {title: 'AGENDADA', css:'secondary'}
             break;        
     
         default: statusName = {title: 'INDEFINIDO', css:'light'}
