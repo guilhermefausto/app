@@ -16,10 +16,10 @@ function RenderMessageStatus({status}){
         case 200: statusName = {title: 'ENVIADA', css:'success'}
             break;
         
-        case 300: statusName = {title: 'CRIADA', css:'secondary'}
+        case 150: statusName = {title: 'AGENDADA', css:'secondary'}
             break;        
     
-        default: statusName = {title: 'INDEFINIDO', css:'primary'}
+        default: statusName = {title: 'INDEFINIDO', css:'light'}
             break;
     }
 
