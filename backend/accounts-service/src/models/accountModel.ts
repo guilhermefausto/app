@@ -24,7 +24,7 @@ const Account = database.define<IAccountModel>('account',{
         unique: true
     },
     password: {
-        type: Sequelize.STRING(50),
+        type: Sequelize.STRING(150),
         allowNull: false
     },
     status: {
@@ -32,7 +32,7 @@ const Account = database.define<IAccountModel>('account',{
         defaultValue: 100
     },
     domain: {
-        type: Sequelize.STRING(100),
+        type: Sequelize.STRING(150),
         allowNull: false,
         unique: true
     }
