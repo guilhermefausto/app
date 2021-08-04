@@ -36,7 +36,7 @@ const contactUpdateSchema = Joi.object({
              .max(150),
     
     phone: Joi.string()
-              .pattern(/$[0-9]{10,11}$/),
+              .pattern(/[0-9]{10,11}/),
     
     status: Joi.number()
                .integer()
