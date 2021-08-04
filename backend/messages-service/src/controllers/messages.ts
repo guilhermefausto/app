@@ -3,7 +3,7 @@ import repository from '../models/messageRepository';
 import controllerCommons from 'ms-commons/api/controllers/controller';
 import {Token} from 'ms-commons/api/auth/accountsAuth';
 import { IMessage } from '../models/message';
-import { MessageStatus } from '..//models/messageStatus';
+import { MessageStatus } from '../models/messageStatus';
 import {getContacts, getContact} from 'ms-commons/clients/contactsService';
 import {getAccountEmail} from 'ms-commons/clients/accountsService';
 import queueService from 'ms-commons/clients/queueService';
