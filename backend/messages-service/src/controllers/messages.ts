@@ -9,7 +9,7 @@ import {getAccountEmail} from 'ms-commons/clients/accountsService';
 import queueService from 'ms-commons/clients/queueService';
 import emailService from 'ms-commons/clients/emailService';
 import sendingRepository from '../models/sendingRepository';
-import { SendingStatus } from '..//models/sendingStatus';
+import { SendingStatus } from '../models/sendingStatus';
 import { ISending } from '../models/sending';
 import messageRepository from '../models/messageRepository';
 
