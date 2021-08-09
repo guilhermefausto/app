@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 const SECRET = process.env.MS_JWT_SECRET;
-const EXPIRATION = process.env.MS_JWT_EXPIRES;
+const EXPIRATION = parseInt(`${process.env.MS_JWT_EXPIRES}`);
 
 async function sign(token) {
     try {
