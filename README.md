@@ -9,5 +9,3 @@ O curso mostrou como construir o MVP de um projeto real, um SaaS multi-tenant de
  - TypeScript
  - Amazon AWS (Foram utilizados recursos como LightSail, S3, SQS, SES, Lambda, CloudWatch)
  - A aplicação também trabalha com filas, JWT, serverless e muitos outros conceitos do mundo real.
- 
- O projeto está publicado no seguinte endereço: http://app.mailshrimp.guilhermefausto.com.br
